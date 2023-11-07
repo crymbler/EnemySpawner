@@ -9,16 +9,16 @@ public class Spawner : MonoBehaviour
     [SerializeField] private float _spawnDelay;
     [SerializeField] private float _timeToDestroy;
 
-    private Transform[] _VectorSpawnpoints;
+    private Transform[] _spawnpoints;
     private float _nextSpawnDelay;
 
     private void Start()
     {
-        _VectorSpawnpoints = new Transform[_pointContainer.childCount];
+        _spawnpoints = new Transform[_pointContainer.childCount];
 
         for (int i = 0; i < _pointContainer.childCount; i++)
         {
-            _VectorSpawnpoints[i] = _pointContainer.GetChild(i);
+            _spawnpoints[i] = _pointContainer.GetChild(i);
         }
     }
 
@@ -34,10 +34,10 @@ public class Spawner : MonoBehaviour
 
     private void SpawnEnemy()
     {
-        int randomNumber = Random.Range(0, _VectorSpawnpoints.Length);
+        int rundomNumber = Random.Range(0, _spawnpoints.Length);
 
-        Vector2 objectPosition = _VectorSpawnpoints[randomNumber].position;
-        Enemy enemy = Instantiate(_enemyPrefab, objectPosition, Quaternion.identity);
+        Vector2 spawnpoint = _spawnpoints[rundomNumber].position;
+        Enemy enemy = Instantiate(_enemyPrefab, spawnpoint, Quaternion.identity);
 
         Destroy(enemy.gameObject, _timeToDestroy);
     }
