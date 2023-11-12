@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
@@ -7,10 +6,14 @@ public class Spawner : MonoBehaviour
     [SerializeField] private Transform _pointContainer;
     [SerializeField] private Enemy _enemyPrefab;
     [SerializeField] private float _spawnDelay;
-    [SerializeField] private float _timeToDestroy;
 
     private Transform[] _spawnpoints;
-    private float _nextSpawnDelay;
+    private WaitForSeconds _delay;
+
+    private void Awake()
+    {
+        _delay = new WaitForSeconds(_spawnDelay);
+    }
 
     private void Start()
     {
@@ -20,25 +23,20 @@ public class Spawner : MonoBehaviour
         {
             _spawnpoints[i] = _pointContainer.GetChild(i);
         }
+
+        StartCoroutine(SpawnEnemy());
     }
 
-    private void Update()
+    private IEnumerator SpawnEnemy()
     {
-        if (Time.time > _nextSpawnDelay)
+        while (true)
         {
-            _nextSpawnDelay = Time.time + _spawnDelay;
+            int rundomNumber = Random.Range(0, _spawnpoints.Length);
 
-            SpawnEnemy();
+            Vector2 spawnpoint = _spawnpoints[rundomNumber].position;
+            Instantiate(_enemyPrefab, spawnpoint, Quaternion.identity);
+
+            yield return _delay;
         }
-    }
-
-    private void SpawnEnemy()
-    {
-        int rundomNumber = Random.Range(0, _spawnpoints.Length);
-
-        Vector2 spawnpoint = _spawnpoints[rundomNumber].position;
-        Enemy enemy = Instantiate(_enemyPrefab, spawnpoint, Quaternion.identity);
-
-        Destroy(enemy.gameObject, _timeToDestroy);
     }
 }

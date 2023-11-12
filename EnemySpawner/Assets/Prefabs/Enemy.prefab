@@ -97,6 +97,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c45dc7cf2034c848b5f139f6f89a0ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 2
-  Range: 5
-  _prefab: {fileID: 543511022260148891}
+  _timeToDestroy: 2
