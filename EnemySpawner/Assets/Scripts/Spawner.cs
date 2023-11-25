@@ -9,9 +9,14 @@ public class Spawner : MonoBehaviour
 
     private Transform[] _spawnpoints;
     private WaitForSeconds _delay;
+    private int _minAngle;
+    private int _maxAngle;
 
     private void Awake()
     {
+        _minAngle = 0;
+        _maxAngle = 360;
+
         _delay = new WaitForSeconds(_spawnDelay);
     }
 
@@ -34,7 +39,7 @@ public class Spawner : MonoBehaviour
             int rundomNumber = Random.Range(0, _spawnpoints.Length);
 
             Vector2 spawnpoint = _spawnpoints[rundomNumber].position;
-            Instantiate(_enemyPrefab, spawnpoint, Quaternion.identity);
+            Instantiate(_enemyPrefab, spawnpoint, Quaternion.Euler(new Vector3(Random.Range(_minAngle, _maxAngle), Random.Range(_minAngle, _maxAngle), 0)));
 
             yield return _delay;
         }
