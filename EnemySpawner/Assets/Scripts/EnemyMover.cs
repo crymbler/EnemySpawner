@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyMover : MonoBehaviour
@@ -8,14 +6,13 @@ public class EnemyMover : MonoBehaviour
 
     private Vector2 _direction;
 
-    private void Awake()
-    {
-        Spawner spawner = new Spawner();
-        _direction = spawner.EnemyDirection();
-    }
-
     private void Update()
     {
         transform.Translate(_direction * _speed * Time.deltaTime);
+    }
+
+    public void SetDirection(Vector2 direction)
+    {
+        _direction = direction;
     }
 }

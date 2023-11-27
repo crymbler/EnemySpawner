@@ -4,46 +4,50 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     [SerializeField] private Transform _pointContainer;
-    [SerializeField] private Enemy _enemyPrefab;
+    [SerializeField] private EnemyMover _enemyPrefab;
     [SerializeField] private float _spawnDelay;
 
-    private Transform[] _spawnpoints;
+    private Transform[] _spawnPoints;
     private WaitForSeconds _delay;
+    private Coroutine _spawnRoutine;
     private int _minXDirection = -5;
     private int _maxXDirection = 5;
     private int _minYDirection = -5;
     private int _maxYDirection = 5;
 
-    private void Awake()
-    {
-        _delay = new WaitForSeconds(_spawnDelay);
-    }
-
     private void Start()
     {
-        _spawnpoints = new Transform[_pointContainer.childCount];
+        _delay = new WaitForSeconds(_spawnDelay);
+
+        _spawnPoints = new Transform[_pointContainer.childCount];
 
         for (int i = 0; i < _pointContainer.childCount; i++)
         {
-            _spawnpoints[i] = _pointContainer.GetChild(i);
+            _spawnPoints[i] = _pointContainer.GetChild(i);
         }
 
-        StartCoroutine(SpawnEnemy());
+        _spawnRoutine = StartCoroutine(SpawnEnemy());
     }
 
-    public Vector2 EnemyDirection()
+    private void OnDestroy()
     {
-       return new Vector2(Random.Range(_minXDirection, _maxXDirection), Random.Range(_minYDirection, _maxYDirection));
+        StopCoroutine(_spawnRoutine);
+    }
+
+    public Vector2 DirectionGeneration()
+    {
+        return new Vector2(Random.Range(_minXDirection, _maxXDirection), Random.Range(_minYDirection, _maxYDirection));
     }
 
     private IEnumerator SpawnEnemy()
     {
         while (true)
         {
-            int rundomNumber = Random.Range(0, _spawnpoints.Length);
-            Vector2 spawnpoint = _spawnpoints[rundomNumber].position;
+            int rundomNumber = Random.Range(0, _spawnPoints.Length);
+            Vector2 spawnPoint = _spawnPoints[rundomNumber].position;
 
-            Instantiate(_enemyPrefab, spawnpoint, Quaternion.identity);
+            EnemyMover enemy = Instantiate<EnemyMover>(_enemyPrefab, spawnPoint, Quaternion.identity);
+            enemy.SetDirection(DirectionGeneration());
 
             yield return _delay;
         }
